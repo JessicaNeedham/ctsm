@@ -1951,6 +1951,7 @@ contains
    use FatesIOVariableKindMod, only : patch_r8, patch_ground_r8, patch_size_pft_r8
    use FatesIOVariableKindMod, only : site_r8, site_ground_r8, site_size_pft_r8
    use FatesIOVariableKindMod, only : site_size_r8, site_pft_r8, site_age_r8
+   use FatesIOVariableKindMod, only : site_coage_r8, site_coage_pft_r8
    use FatesIOVariableKindMod, only : site_fuel_r8, site_cwdsc_r8, site_scag_r8
    use FatesIOVariableKindMod, only : site_scagpft_r8, site_agepft_r8
    use FatesIOVariableKindMod, only : site_can_r8, site_cnlf_r8, site_cnlfpft_r8
@@ -2121,6 +2122,26 @@ contains
                               ptr_col=this%fates_hist%hvars(ivar)%r82d,    & 
                               default=trim(vdefault),                       &
                               set_lake=0._r8,set_urb=0._r8)
+        
+        case(site_coage_pft_r8)
+           d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
+           dim2name = this%fates_hist%dim_bounds(d_index)%name
+           call hist_addfld2d(fname=trim(vname),units=trim(vunits),         &
+                              type2d=trim(dim2name),                        &
+                              avgflag=trim(vavgflag),long_name=trim(vlong), &
+                              ptr_col=this%fates_hist%hvars(ivar)%r82d,      & 
+                              default=trim(vdefault),                       &
+                              set_lake=0._r8,set_urb=0._r8)
+        case(site_coage_r8)
+           d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
+           dim2name = this%fates_hist%dim_bounds(d_index)%name
+           call hist_addfld2d(fname=trim(vname),units=trim(vunits),         &
+                              type2d=trim(dim2name),                        &
+                              avgflag=trim(vavgflag),long_name=trim(vlong), &
+                              ptr_col=this%fates_hist%hvars(ivar)%r82d,    & 
+                              default=trim(vdefault),                       &
+                              set_lake=0._r8,set_urb=0._r8)
+
         case(site_pft_r8)
            d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
            dim2name = this%fates_hist%dim_bounds(d_index)%name
@@ -2440,7 +2461,7 @@ contains
  subroutine hlm_bounds_to_fates_bounds(hlm, fates)
 
    use FatesIODimensionsMod, only : fates_bounds_type
-   use FatesInterfaceMod, only : nlevsclass, nlevage
+   use FatesInterfaceMod, only : nlevsclass, nlevage, nlevcoage
    use FatesInterfaceMod, only : nlevheight
    use EDtypesMod, only : nfsc, ncwd
    use EDtypesMod, only : nlevleaf, nclmax
@@ -2469,6 +2490,12 @@ contains
    
    fates%size_class_begin = 1
    fates%size_class_end = nlevsclass
+
+   fates%coagepf_class_begin = 1
+   fates%coagepf_class_end = nlevcoage
+
+   fates%coage_class_begin = 1
+   fates%coage_class_end = 1
 
    fates%pft_class_begin = 1
    fates%pft_class_end = numpft_fates
