@@ -2061,6 +2061,9 @@ contains
         dk_index = this%fates_hist%hvars(ivar)%dim_kinds_index
         ioname = trim(this%fates_hist%dim_kinds(dk_index)%name)
         
+        write(iulog,*) 'attempt ioname: ', ioname
+        write(iulog,*) 'dk_index: ', dk_index
+
         select case(trim(ioname))
         case(patch_r8)
            call hist_addfld1d(fname=trim(vname),units=trim(vunits),         &
@@ -2113,6 +2116,8 @@ contains
                               ptr_col=this%fates_hist%hvars(ivar)%r82d,      & 
                               default=trim(vdefault),                       &
                               set_lake=0._r8,set_urb=0._r8)
+           write(iulog,*) 'size_size_pft pointer: ', this%fates_hist%hvars(ivar)%r82d
+
         case(site_size_r8)
            d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
            dim2name = this%fates_hist%dim_bounds(d_index)%name
@@ -2126,12 +2131,18 @@ contains
         case(site_coage_pft_r8)
            d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
            dim2name = this%fates_hist%dim_bounds(d_index)%name
+
+           write(iulog,*) 'site_coage_pft d_index: ', d_index
+           write(iulog,*) 'site_coage_pft dim2name: ', dim2name
+
            call hist_addfld2d(fname=trim(vname),units=trim(vunits),         &
                               type2d=trim(dim2name),                        &
                               avgflag=trim(vavgflag),long_name=trim(vlong), &
-                              ptr_col=this%fates_hist%hvars(ivar)%r82d,      & 
+                              ptr_col=this%fates_hist%hvars(ivar)%r82d,      &
                               default=trim(vdefault),                       &
                               set_lake=0._r8,set_urb=0._r8)
+           write(iulog,*) 'size_coage_pft pointer: ', this%fates_hist%hvars(ivar)%r82d
+   
         case(site_coage_r8)
            d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
            dim2name = this%fates_hist%dim_bounds(d_index)%name
@@ -2249,6 +2260,8 @@ contains
         end select
           
       end associate
+      write(iulog,*)'success: ', ioname
+
    end do
  end subroutine init_history_io
 
@@ -2492,10 +2505,10 @@ contains
    fates%size_class_end = nlevsclass
 
    fates%coagepf_class_begin = 1
-   fates%coagepf_class_end = nlevcoage
+   fates%coagepf_class_end = nlevcoage * numpft_fates
 
    fates%coage_class_begin = 1
-   fates%coage_class_end = 1
+   fates%coage_class_end = nlevcoage
 
    fates%pft_class_begin = 1
    fates%pft_class_end = numpft_fates
