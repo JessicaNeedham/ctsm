@@ -406,8 +406,6 @@ contains
     masterlist(f)%field%c2l_scale_type = c2l_scale_type
     masterlist(f)%field%l2g_scale_type = l2g_scale_type
 
-!    write(iulog,*)'htapes_fieldlist  type: ', type2d, '  num2d: ', num2d
-
     select case (type1d)
     case (grlnd)
        masterlist(f)%field%beg1d = bounds%begg
@@ -1042,7 +1040,7 @@ contains
     end if
 
     type2d = tape(t)%hlist(n)%field%type2d
-    write(iulog,*)'htape_addfld, dim: ', type2d, 'num2d: ', num2d
+    
 
   end subroutine htape_addfld
 
@@ -1069,15 +1067,11 @@ contains
        do f = 1,tape(t)%nflds
           num2d = tape(t)%hlist(f)%field%num2d
           type2d = tape(t)%hlist(f)%field%type2d
-          write(iulog,*)'attempting: ', type2d, 'dim: ', num2d
-         ! write(iulog,*)'bounds: ', bounds
         if ( num2d == 1) then   
              call hist_update_hbuf_field_1d (t, f, bounds)
           else
             ! write(iulog,*)'tape, field, : ', t, f
              call hist_update_hbuf_field_2d (t, f, bounds, num2d)
-             write(iulog,*)'success: ', type2d
-            ! write(iulog,*)'dim: ', num2d
           end if
        end do
 !$OMP END PARALLEL DO
@@ -1463,16 +1457,7 @@ contains
        call hist_set_snow_field_2d(field, clmptr_ra(hpindex)%ptr, no_snow_behavior, type1d, &
             beg1d, end1d)
     else
-    
-       ! but the pointer is pointing at something of dim 25
-       write(iulog,*) 'clmptr_ra(hpindex)%ptr = ', clmptr_ra(hpindex)%ptr 
-
-       ! Everything being fed in is dim 50 
-       write(iulog,*) 'nacs :', nacs
-       write(iulog,*) 'hbuf :',hbuf
-       write(iulog,*) 'hpindex: ', hpindex
-       write(iulog,*) 'num2d: ', num2d
-
+   
        field => clmptr_ra(hpindex)%ptr(:,1:num2d)
        field_allocated = .false.
     end if
@@ -2083,18 +2068,14 @@ contains
        call ncd_defdim(lnfid, 'fates_levscagpf', nlevsclass * nlevage * numpft_ed, dimid)
        call ncd_defdim(lnfid, 'fates_levagepft', nlevage * numpft_ed, dimid)
        call ncd_defdim(lnfid, 'fates_levscls', nlevsclass, dimid)
-       write(iulog,*)'htape_create: levscls ', nlevsclass, ' dimid ', dimid
        call ncd_defdim(lnfid, 'fates_levcacls', nlevcoage, dimid)
-       write(iulog,*)'htape_create: levcacls ', nlevcoage, ' dimid ', dimid
        call ncd_defdim(lnfid, 'fates_levpft', numpft_ed, dimid)
        call ncd_defdim(lnfid, 'fates_levage', nlevage, dimid)
        call ncd_defdim(lnfid, 'fates_levheight', nlevheight, dimid)
        call ncd_defdim(lnfid, 'fates_levfuel', nfsc, dimid)
        call ncd_defdim(lnfid, 'fates_levcwdsc', ncwd, dimid)
        call ncd_defdim(lnfid, 'fates_levscpf', nlevsclass*numpft_ed, dimid)
-       write(iulog,*)'htape_create: levscpf ', nlevsclass*numpft_ed, ' dimid ', dimid
        call ncd_defdim(lnfid, 'fates_levcapf', nlevcoage*numpft_ed, dimid)
-       write(iulog,*)'htape_create: levcapf ', nlevcoage*numpft_ed, ' dimid ', dimid 
        call ncd_defdim(lnfid, 'fates_levcan', nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_ed, dimid)
@@ -2655,17 +2636,11 @@ contains
              call ncd_io(varname='fates_scmap_levscag',data=fates_hdim_scmap_levscag, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_agmap_levscag',data=fates_hdim_agmap_levscag, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levscls',data=fates_hdim_levsclass, ncid=nfid(t), flag='write')
-             write(iulog,*) 'fates_hdim_levsclass ', fates_hdim_levsclass
              call ncd_io(varname='fates_levcacls',data=fates_hdim_levcoage, ncid=nfid(t), flag='write')
-             write(iulog,*) 'fates_hdim_levcoage ', fates_hdim_levcoage
              call ncd_io(varname='fates_pftmap_levscpf',data=fates_hdim_pfmap_levscpf, ncid=nfid(t), flag='write')
-             write(iulog,*) 'fates_hdim_pfmap_levscpf ', fates_hdim_pfmap_levscpf
              call ncd_io(varname='fates_scmap_levscpf',data=fates_hdim_scmap_levscpf, ncid=nfid(t), flag='write')
-             write(iulog,*) 'fates_hdim_scmap_levscpf ', fates_hdim_scmap_levscpf
              call ncd_io(varname='fates_pftmap_levcapf',data=fates_hdim_pfmap_levcapf, ncid=nfid(t), flag='write')
-             write(iulog,*) 'fates_hdim_pftmap_levcapf ', fates_hdim_pfmap_levcapf
              call ncd_io(varname='fates_camap_levcapf',data=fates_hdim_camap_levcapf, ncid=nfid(t), flag='write')
-             write(iulog,*) 'fates_hdim_camap_levcapf ', fates_hdim_camap_levcapf
              call ncd_io(varname='fates_levage',data=fates_hdim_levage, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levheight',data=fates_hdim_levheight, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levpft',data=fates_hdim_levpft, ncid=nfid(t), flag='write')
@@ -4833,10 +4808,8 @@ contains
        num2d = nlevdecomp_full
     case ('fates_levscls')
        num2d = nlevsclass
-       write(iulog,*)'levscls = ', num2d
     case('fates_levcacls')
        num2d = nlevcoage
-       write(iulog,*)'levcacls = ', num2d
     case ('fates_levpft')
        num2d = numpft_ed
     case ('fates_levage')
@@ -4849,10 +4822,8 @@ contains
        num2d = ncwd
     case ('fates_levscpf')
        num2d = nlevsclass*numpft_ed
-       write(iulog,*)'levscpf = ', num2d
     case ('fates_levcapf')
        num2d = nlevcoage*numpft_ed
-       write(iulog,*)'levcapf = ', num2d
     case ('fates_levscag')
        num2d = nlevsclass*nlevage
     case ('fates_levscagpf')
@@ -4898,30 +4869,22 @@ contains
 
     ! History buffer pointer
     hpindex = pointer_index()
-    write(iulog,*) 'name: ', long_name
-    write(iulog,*) 'hpindex: ', hpindex
    
 
     if (present(ptr_lnd)) then
        l_type1d = grlnd
        l_type1d_out = grlnd
        clmptr_ra(hpindex)%ptr => ptr_lnd
-       write(iulog,*) 'ptr_lnd present'
-!       write(iulog,*) 'clmptr_ra(hpindex)%ptr :', clmptr_ra(hpindex)%ptr
- !      write(iulog,*) 'ptr_lnd: ', ptr_lnd
-
 
     else if (present(ptr_gcell)) then
        l_type1d = nameg
        l_type1d_out = nameg
        clmptr_ra(hpindex)%ptr => ptr_gcell
-       write(iulog,*) 'ptr_gcell present' 
 
     else if (present(ptr_lunit)) then
        l_type1d = namel
        l_type1d_out = namel
        clmptr_ra(hpindex)%ptr => ptr_lunit
-       write(iulog,*) 'ptr_lunit present' 
 
        if (present(set_lake)) then
           do l = bounds%begl,bounds%endl
@@ -4953,9 +4916,6 @@ contains
        l_type1d = namec
        l_type1d_out = namec
        clmptr_ra(hpindex)%ptr => ptr_col
-      ! write(iulog,*) 'clmptr_ra(hpindex)%ptr ', ptr_col
-!       write(iulog,*) 'clmptr_ra(hpindex)%ptr = ', clmptr_ra(hpindex)%ptr
-      write(iulog,*) 'ptr_col present '
        if (present(set_lake)) then
           do c = bounds%begc,bounds%endc
              l =col%landunit(c)
@@ -4991,7 +4951,6 @@ contains
        l_type1d = namep
        l_type1d_out = namep
        clmptr_ra(hpindex)%ptr => ptr_patch
-       write(iulog,*) 'ptr_patch present'
 
        if (present(set_lake)) then
           do p = bounds%begp,bounds%endp
