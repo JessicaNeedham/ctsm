@@ -2072,19 +2072,20 @@ contains
     call ncd_defdim(lnfid, 'scale_type_string_length', scale_type_strlen, dimid)
     call ncd_defdim( lnfid, 'levdcmp', nlevdecomp_full, dimid)
     
+
     if(use_fates)then
        call ncd_defdim(lnfid, 'fates_levscag', nlevsclass * nlevage, dimid)
        call ncd_defdim(lnfid, 'fates_levscagpf', nlevsclass * nlevage * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levagepft', nlevage * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levscls', nlevsclass, dimid)
        call ncd_defdim(lnfid, 'fates_levcacls', nlevcoage, dimid)
-       call ncd_defdim(lnfid, 'fates_levpft', numpft_ed, dimid)
+       call ncd_defdim(lnfid, 'fates_levpft', numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levage', nlevage, dimid)
        call ncd_defdim(lnfid, 'fates_levheight', nlevheight, dimid)
        call ncd_defdim(lnfid, 'fates_levfuel', nfsc, dimid)
        call ncd_defdim(lnfid, 'fates_levcwdsc', ncwd, dimid)
-       call ncd_defdim(lnfid, 'fates_levscpf', nlevsclass*numpft_ed, dimid)
-       call ncd_defdim(lnfid, 'fates_levcapf', nlevcoage*numpft_ed, dimid)
+       call ncd_defdim(lnfid, 'fates_levscpf', nlevsclass*numpft_fates, dimid)
+       call ncd_defdim(lnfid, 'fates_levcapf', nlevcoage*numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levcan', nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
@@ -4869,7 +4870,7 @@ contains
     case ('fates_levscpf')
        num2d = nlevsclass*numpft_fates
     case ('fates_levcapf')
-       num2d = nlevlcoage*numpft_fates
+       num2d = nlevcoage*numpft_fates
     case ('fates_levscag')
        num2d = nlevsclass*nlevage
     case ('fates_levscagpf')
