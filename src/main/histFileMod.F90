@@ -21,6 +21,7 @@ module histFileMod
   use ColumnType     , only : col                
   use PatchType      , only : patch                
   use EDTypesMod     , only : nclmax
+  use EDTypesMod     , only : ncrowndamagemax
   use EDTypesMod     , only : nlevleaf
   use FatesInterfaceMod , only : nlevsclass, nlevage
   use FatesInterfaceMod , only : nlevheight
@@ -2078,6 +2079,7 @@ contains
        call ncd_defdim(lnfid, 'fates_levcan', nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
+       call ncd_defdim(lnfid, 'fates_levcdam', ncrowndamagemax, dimid)
        call ncd_defdim(lnfid, 'fates_levelem', num_elements_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelpft', num_elements_fates * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelcwd', num_elements_fates * ncwd, dimid)
@@ -2516,6 +2518,7 @@ contains
     use FatesInterfaceMod, only : fates_hdim_canmap_levcnlfpf
     use FatesInterfaceMod, only : fates_hdim_lfmap_levcnlfpf
     use FatesInterfaceMod, only : fates_hdim_pftmap_levcnlfpf
+    use FatesInterfaceMod, only : fates_hdim_levcdam
     use FatesInterfaceMod, only : fates_hdim_levelem
     use FatesInterfaceMod, only : fates_hdim_elmap_levelpft
     use FatesInterfaceMod, only : fates_hdim_pftmap_levelpft
@@ -2611,6 +2614,8 @@ contains
                   long_name='FATES leaf level of combined canopy x leaf x pft dimension', ncid=nfid(t))
              call ncd_defvar(varname='fates_pftmap_levcnlfpf',xtype=ncd_int, dim1name='fates_levcnlfpf', &
                   long_name='FATES PFT level of combined canopy x leaf x pft dimension', ncid=nfid(t))
+             call ncd_defvar(varname='fates_levcdam',xtype=ncd_int, dim1name='fates_levcdam', &
+                  long_name='FATES crown damage class', ncid=nfid(t))
              call ncd_defvar(varname='fates_scmap_levscagpft', xtype=ncd_int, dim1name='fates_levscagpf', &
                   long_name='FATES size-class map into size x patch age x pft', units='-', ncid=nfid(t))
              call ncd_defvar(varname='fates_agmap_levscagpft', xtype=ncd_int, dim1name='fates_levscagpf', &
@@ -2666,6 +2671,7 @@ contains
              call ncd_io(varname='fates_canmap_levcnlfpf',data=fates_hdim_canmap_levcnlfpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_lfmap_levcnlfpf',data=fates_hdim_lfmap_levcnlfpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_pftmap_levcnlfpf',data=fates_hdim_pftmap_levcnlfpf, ncid=nfid(t), flag='write')
+             call ncd_io(varname='fates_levcdam',data=fates_hdim_levcdam, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_scmap_levscagpft',data=fates_hdim_scmap_levscagpft, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_agmap_levscagpft',data=fates_hdim_agmap_levscagpft, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_pftmap_levscagpft',data=fates_hdim_pftmap_levscagpft, ncid=nfid(t), flag='write')
@@ -4856,6 +4862,8 @@ contains
        num2d = nlevleaf * nclmax
     case ('fates_levcnlfpf')
        num2d = nlevleaf * nclmax * numpft_fates
+    case ('fates_levcdam')
+       num2d = ncrowndamagemax
     case ('ltype')
        num2d = max_lunit
     case ('natpft')
