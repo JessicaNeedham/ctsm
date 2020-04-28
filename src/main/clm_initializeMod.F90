@@ -59,6 +59,8 @@ contains
     use ch4varcon        , only: ch4conrd
     use UrbanParamsType  , only: UrbanInput, IsSimpleBuildTemp
     use dynSubgridControlMod, only: dynSubgridControl_init
+    use clm_varctl       , only: use_fates_cohort_age_tracking
+    
     !
     ! !LOCAL VARIABLES:
     integer           :: ier                     ! error status
@@ -188,7 +190,7 @@ contains
     ! to allocate space)
     ! ------------------------------------------------------------------------
     
-    call set_fates_global_elements(use_fates)
+    call set_fates_global_elements(use_fates, use_fates_cohort_age_tracking)
 
     ! ------------------------------------------------------------------------
     ! Determine decomposition of subgrid scale landunits, columns, patches
