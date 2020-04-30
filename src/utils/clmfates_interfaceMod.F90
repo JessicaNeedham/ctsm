@@ -1959,7 +1959,7 @@ contains
    use FatesIOVariableKindMod, only : site_fuel_r8, site_cwdsc_r8, site_scag_r8
    use FatesIOVariableKindMod, only : site_scagpft_r8, site_agepft_r8
    use FatesIOVariableKindMod, only : site_can_r8, site_cnlf_r8, site_cnlfpft_r8
-   use FatesIOVariableKindMod, only : site_cdamage_r8
+   use FatesIOVariableKindMod, only : site_cdamage_r8, site_cdpf_r8, site_cdsc_r8
    use FatesIOVariableKindMod, only : site_height_r8, site_elem_r8, site_elpft_r8
    use FatesIOVariableKindMod, only : site_elcwd_r8, site_elage_r8
    use FatesIODimensionsMod, only : fates_bounds_type
@@ -2097,7 +2097,7 @@ contains
              site_age_r8, site_height_r8, site_coage_r8,site_coage_pft_r8, &
              site_fuel_r8, site_cwdsc_r8, &
              site_can_r8,site_cnlf_r8, site_cnlfpft_r8, site_scag_r8, & 
-             site_cdamage_r8, &
+             site_cdamage_r8, site_cdpf_r8, site_cdsc_r8, &
              site_scagpft_r8, site_agepft_r8, site_elem_r8, site_elpft_r8, &
              site_elcwd_r8, site_elage_r8)
 
@@ -2424,6 +2424,12 @@ contains
 
    fates%cdamage_begin = 1
    fates%cdamage_end = ncrowndamagemax
+
+   fates%cdpf_begin = 1
+   fates%cdpf_end = ncrowndamagemax * numpft_fates * nlevsclass
+
+   fates%cdsc_begin = 1
+   fates%cdsc_end = ncrowndamagemax * nlevsclass
    
    fates%elem_begin = 1
    fates%elem_end   = num_elements
