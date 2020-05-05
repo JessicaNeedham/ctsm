@@ -2086,6 +2086,7 @@ contains
        call ncd_defdim(lnfid, 'fates_levcwdsc', ncwd, dimid)
        call ncd_defdim(lnfid, 'fates_levscpf', nlevsclass*numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levcapf', nlevcoage*numpft_fates, dimid)
+       call ncd_defdim(lnfid, 'fates_levcasc', nlevcoage*nlevsclass, dimid)
        call ncd_defdim(lnfid, 'fates_levcan', nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
@@ -2512,6 +2513,8 @@ contains
     use FatesInterfaceMod, only : fates_hdim_levcoage
     use FatesInterfaceMod, only : fates_hdim_pfmap_levcapf
     use FatesInterfaceMod, only : fates_hdim_camap_levcapf
+    use FatesInterfaceMod, only : fates_hdim_scmap_levcasc
+    use FatesInterfaceMod, only : fates_hdim_camap_levcasc
     use FatesInterfaceMod, only : fates_hdim_levage
     use FatesInterfaceMod, only : fates_hdim_levheight
     use FatesInterfaceMod, only : fates_hdim_levpft
@@ -2609,6 +2612,10 @@ contains
                   long_name='FATES pft index of the combined pft-cohort age class dimension', units='-', ncid=nfid(t))
              call ncd_defvar(varname='fates_camap_levcapf',xtype=ncd_int, dim1name='fates_levcapf', &
                   long_name='FATES cohort age index of the combined pft-cohort age dimension', units='-', ncid=nfid(t))
+             call ncd_defvar(varname='fates_camap_levcasc',xtype=ncd_int, dim1name='fates_levcasc', &
+                  long_name='FATES cohort age index of the combined size-cohort age class dimension', units='-', ncid=nfid(t))
+             call ncd_defvar(varname='fates_scmap_levcasc',xtype=ncd_int, dim1name='fates_levcasc', &
+                  long_name='FATES size index of the combined size-cohort age dimension', units='-', ncid=nfid(t))
              call ncd_defvar(varname='fates_levage',xtype=tape(t)%ncprec, dim1name='fates_levage', &
                   long_name='FATES patch age (yr)', ncid=nfid(t))
              call ncd_defvar(varname='fates_levheight',xtype=tape(t)%ncprec, dim1name='fates_levheight', &
@@ -2678,6 +2685,8 @@ contains
              call ncd_io(varname='fates_scmap_levscpf',data=fates_hdim_scmap_levscpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_pftmap_levcapf',data=fates_hdim_pfmap_levcapf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_camap_levcapf',data=fates_hdim_camap_levcapf, ncid=nfid(t), flag='write')
+             call ncd_io(varname='fates_scmap_levcasc',data=fates_hdim_scmap_levcasc, ncid=nfid(t), flag='write')
+             call ncd_io(varname='fates_camap_levcasc',data=fates_hdim_camap_levcasc, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levage',data=fates_hdim_levage, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levheight',data=fates_hdim_levheight, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levpft',data=fates_hdim_levpft, ncid=nfid(t), flag='write')
@@ -4871,6 +4880,8 @@ contains
        num2d = nlevsclass*numpft_fates
     case ('fates_levcapf')
        num2d = nlevcoage*numpft_fates
+    case ('fates_levcasc')
+       num2d = nlevcoage*nlevsclass
     case ('fates_levscag')
        num2d = nlevsclass*nlevage
     case ('fates_levscagpf')
