@@ -2370,6 +2370,9 @@ contains
    fates%coagepf_class_begin = 1
    fates%coagepf_class_end = nlevcoage * numpft_fates
 
+   fates%coagesize_class_begin = 1
+   fates%coagesize_class_end = nlevcoage * nlevsclass
+
    fates%coage_class_begin = 1
    fates%coage_class_end = nlevcoage
 
