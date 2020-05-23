@@ -2424,7 +2424,7 @@ module CLMFatesInterfaceMod
    use FatesLitterMod,    only : ncwd
    use EDtypesMod,        only : nlevleaf, nclmax
    use EDtypesMod,        only : ncrowndamagemax
-   use FatesInterfaceMod, only : numpft_fates => numpft
+   use FatesInterfaceTypesMod, only : numpft_fates => numpft
    use clm_varpar,        only : nlevgrnd
 
    implicit none
