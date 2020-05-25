@@ -2642,6 +2642,8 @@ lnd/clm2/surfdata_map/landuse.timeseries_ne30np4_hist_16pfts_Irrig_CMIP6_simyr18
 <use_fates_spitfire            use_fates=".true.">.false.</use_fates_spitfire>
 <use_fates_planthydro          use_fates=".true.">.false.</use_fates_planthydro>
 <use_fates_cohort_age_tracking use_fates=".true.">.false.</use_fates_cohort_age_tracking>
+<use_fates_canopy_damage       use_fates=".true.">.false.</use_fates_canopy_damage>
+<use_fates_understory_damage   use_fates=".true.">.false.</use_fates_understory_damage>
 <use_fates_ed_st3              use_fates=".true.">.false.</use_fates_ed_st3>
 <use_fates_ed_prescribed_phys  use_fates=".true.">.false.</use_fates_ed_prescribed_phys>
 <use_fates_logging             use_fates=".true.">.false.</use_fates_logging>

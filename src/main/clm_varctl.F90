@@ -211,6 +211,8 @@ module clm_varctl
   logical, public            :: use_fates_logging = .false.            ! true => turn on logging module
   logical, public            :: use_fates_planthydro = .false.         ! true => turn on fates hydro
   logical, public            :: use_fates_cohort_age_tracking = .false. ! true => turn on cohort age tracking
+  logical, public            :: use_fates_canopy_damage = .false.      ! true => turn on canopy damage
+  logical, public            :: use_fates_understory_damage = .false.  ! true => turn on understory damage
   logical, public            :: use_fates_ed_st3   = .false.           ! true => static stand structure
   logical, public            :: use_fates_ed_prescribed_phys = .false. ! true => prescribed physiology
   logical, public            :: use_fates_inventory_init = .false.     ! true => initialize fates from inventory

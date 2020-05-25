@@ -49,6 +49,8 @@ module CLMFatesInterfaceMod
    use clm_varctl        , only : use_fates_spitfire
    use clm_varctl        , only : use_fates_planthydro
    use clm_varctl        , only : use_fates_cohort_age_tracking
+   use clm_varctl        , only : use_fates_canopy_damage
+   use clm_varctl        , only : use_fates_understory_damage
    use clm_varctl        , only : use_fates_ed_st3
    use clm_varctl        , only : use_fates_ed_prescribed_phys
    use clm_varctl        , only : use_fates_logging
@@ -234,6 +236,8 @@ module CLMFatesInterfaceMod
      integer                                        :: pass_inventory_init
      integer                                        :: pass_is_restart
      integer                                        :: pass_cohort_age_tracking
+     integer                                        :: pass_canopy_damage
+     integer                                        :: pass_understory_damage
      
      if (use_fates) then
 
@@ -311,6 +315,22 @@ module CLMFatesInterfaceMod
            pass_cohort_age_tracking = 0
         end if
         call set_fates_ctrlparms('use_cohort_age_tracking',ival=pass_cohort_age_tracking)
+        
+        if(use_fates_canopy_damage) then
+           pass_canopy_damage = 1
+        else
+           pass_canopy_damage = 0
+        end if
+        call set_fates_ctrlparms('use_canopy_damage',ival=pass_canopy_damage)
+
+        if(use_fates_understory_damage) then
+           pass_understory_damage = 1
+        else
+           pass_understory_damage = 0
+        end if
+        call set_fates_ctrlparms('use_understory_damage',ival=pass_understory_damage)
+
+
         
         if(use_fates_inventory_init) then
            pass_inventory_init = 1
@@ -390,6 +410,8 @@ module CLMFatesInterfaceMod
       integer                                        :: pass_logging
       integer                                        :: pass_planthydro
       integer                                        :: pass_cohort_age_tracking
+      integer                                        :: pass_canopy_damage
+      integer                                        :: pass_understory_damage
       integer                                        :: pass_inventory_init
       integer                                        :: pass_is_restart
       integer                                        :: nc        ! thread index
