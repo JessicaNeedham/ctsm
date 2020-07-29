@@ -2449,10 +2449,10 @@ module CLMFatesInterfaceMod
    use FatesIODimensionsMod, only : fates_bounds_type
    use FatesInterfaceTypesMod, only : nlevsclass, nlevage, nlevcoage
    use FatesInterfaceTypesMod, only : nlevheight
+   use FatesInterfaceTypesMod, only : ncrowndamage
    use EDtypesMod,        only : nfsc
    use FatesLitterMod,    only : ncwd
    use EDtypesMod,        only : nlevleaf, nclmax
-   use EDtypesMod,        only : ncrowndamagemax
    use FatesInterfaceTypesMod, only : numpft_fates => numpft
    use clm_varpar,        only : nlevgrnd
 
@@ -2519,13 +2519,13 @@ module CLMFatesInterfaceMod
    fates%cnlfpft_end = nlevleaf * nclmax * numpft_fates
 
    fates%cdamage_begin = 1
-   fates%cdamage_end = ncrowndamagemax
+   fates%cdamage_end = ncrowndamage
 
    fates%cdpf_begin = 1
-   fates%cdpf_end = ncrowndamagemax * numpft_fates * nlevsclass
+   fates%cdpf_end = ncrowndamage * numpft_fates * nlevsclass
 
    fates%cdsc_begin = 1
-   fates%cdsc_end = ncrowndamagemax * nlevsclass
+   fates%cdsc_end = ncrowndamage * nlevsclass
    
    fates%elem_begin = 1
    fates%elem_end   = num_elements

@@ -21,8 +21,8 @@ module histFileMod
   use ColumnType     , only : col                
   use PatchType      , only : patch                
   use EDTypesMod     , only : nclmax
-  use EDTypesMod     , only : ncrowndamagemax
   use EDTypesMod     , only : nlevleaf
+  use FatesInterfaceTypesMod , only : ncrowndamage
   use FatesInterfaceTypesMod , only : nlevsclass, nlevage, nlevcoage
   use FatesInterfaceTypesMod , only : nlevheight
   use EDTypesMod        , only : nfsc
@@ -2088,9 +2088,9 @@ contains
        call ncd_defdim(lnfid, 'fates_levcan', nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
-       call ncd_defdim(lnfid, 'fates_levcdam', ncrowndamagemax, dimid)
-       call ncd_defdim(lnfid, 'fates_levcdsc', ncrowndamagemax * nlevsclass, dimid)
-       call ncd_defdim(lnfid, 'fates_levcdpf', ncrowndamagemax * nlevsclass * numpft_fates, dimid)
+       call ncd_defdim(lnfid, 'fates_levcdam', ncrowndamage, dimid)
+       call ncd_defdim(lnfid, 'fates_levcdsc', ncrowndamage * nlevsclass, dimid)
+       call ncd_defdim(lnfid, 'fates_levcdpf', ncrowndamage * nlevsclass * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelem', num_elements_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelpft', num_elements_fates * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelcwd', num_elements_fates * ncwd, dimid)
@@ -4986,11 +4986,11 @@ contains
     case ('fates_levcnlfpf')
        num2d = nlevleaf * nclmax * numpft_fates
     case ('fates_levcdam')
-       num2d = ncrowndamagemax   
+       num2d = ncrowndamage   
     case ('fates_levcdsc')
-       num2d = ncrowndamagemax * nlevsclass
+       num2d = ncrowndamage * nlevsclass
     case ('fates_levcdpf')
-       num2d = ncrowndamagemax * nlevsclass * numpft_fates
+       num2d = ncrowndamage * nlevsclass * numpft_fates
     case ('ltype')
        num2d = max_lunit
     case ('natpft')

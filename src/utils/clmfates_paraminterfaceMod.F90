@@ -96,9 +96,11 @@ contains
       allocate(fates_params)
       call fates_params%Init()
       call EDPftvarcon_inst%Init()
-
+      write(fates_log(),*)'EDPftvarcon_inst%Init success'
+      
       call EDPftvarcon_inst%Register(fates_params)
-
+      write(fates_log(),*) 'EDPftvarcon_inst%Register success'
+      
       is_host_file = .false.
       call ParametersFromNetCDF(fates_paramfile, is_host_file, fates_params)
 
@@ -106,6 +108,7 @@ contains
       call ParametersFromNetCDF(paramfile, is_host_file, fates_params)
 
       call EDPftvarcon_inst%Receive(fates_params)
+      write(fates_log(),*) 'EDPftvarcon_inst%Receive success'
 
       call fates_params%Destroy()
       deallocate(fates_params)
