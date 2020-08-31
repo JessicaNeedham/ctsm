@@ -399,10 +399,11 @@ module CLMFatesInterfaceMod
       ! is not turned on
       ! ---------------------------------------------------------------------------------
      
-      use FatesInterfaceTypesMod, only : numpft_fates => numpft
-      use FatesParameterDerivedMod, only : param_derived
-      use subgridMod, only :  natveg_patch_exists
-       use clm_instur      , only : wt_nat_patch
+     use FatesInterfaceTypesMod, only : numpft_fates => numpft
+     use FatesInterfaceTypesMod, only : ncrowndamage_fates => ncrowndamage
+     use FatesParameterDerivedMod, only : param_derived
+     use subgridMod, only :  natveg_patch_exists
+     use clm_instur      , only : wt_nat_patch
       implicit none
       
       ! Input Arguments
@@ -432,6 +433,7 @@ module CLMFatesInterfaceMod
       
       ! Parameter Routines
       call param_derived%Init( numpft_fates )
+      call param_derived%InitDamageTransitions (ncrowndamage_fates, numpft_fates)
 
       nclumps = get_proc_clumps()
       allocate(this%fates(nclumps))
