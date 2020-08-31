@@ -52,6 +52,8 @@ module CLMFatesInterfaceMod
    use clm_varctl        , only : use_fates
    use clm_varctl        , only : fates_spitfire_mode
    use clm_varctl        , only : use_fates_planthydro
+   use clm_varctl        , only : use_fates_canopy_damage
+   use clm_varctl        , only : use_fates_understory_damage
    use clm_varctl        , only : use_fates_cohort_age_tracking
    use clm_varctl        , only : use_fates_ed_st3
    use clm_varctl        , only : use_fates_ed_prescribed_phys
@@ -263,6 +265,8 @@ module CLMFatesInterfaceMod
      integer                                        :: pass_inventory_init
      integer                                        :: pass_is_restart
      integer                                        :: pass_cohort_age_tracking
+     integer                                        :: pass_canopy_damage
+     integer                                        :: pass_understory_damage
      integer                                        :: pass_biogeog 
 
 
@@ -351,6 +355,21 @@ module CLMFatesInterfaceMod
         end if
         call set_fates_ctrlparms('use_cohort_age_tracking',ival=pass_cohort_age_tracking)
 
+        if(use_fates_canopy_damage) then
+           pass_canopy_damage = 1
+        else
+           pass_canopy_damage = 0
+        end if
+        call set_fates_ctrlparms('use_canopy_damage',ival=pass_canopy_damage)
+        
+        if(use_fates_understory_damage) then
+           pass_understory_damage = 1
+        else
+           pass_understory_damage = 0
+        end if
+        call set_fates_ctrlparms('use_understory_damage',ival=pass_understory_damage)
+
+        
         ! check fates logging namelist value first because hlm harvest overrides it
         if(use_fates_logging) then
            pass_logging = 1
@@ -432,6 +451,7 @@ module CLMFatesInterfaceMod
       ! ---------------------------------------------------------------------------------
      
       use FatesInterfaceTypesMod, only : numpft_fates => numpft
+      use FatesInterfaceTypesMod, only : ncrowndamage_fates => ncrowndamage
       use FatesParameterDerivedMod, only : param_derived
       use subgridMod, only :  natveg_patch_exists
       use clm_instur       , only : wt_nat_patch
@@ -468,7 +488,8 @@ module CLMFatesInterfaceMod
       
       ! Parameter Routines
       call param_derived%Init( numpft_fates )
-
+      call param_derived%InitDamageTransitions (ncrowndamage_fates, numpft_fates)
+      
       nclumps = get_proc_clumps()
       allocate(this%fates(nclumps))
       allocate(this%f2hmap(nclumps))
@@ -2305,6 +2326,7 @@ module CLMFatesInterfaceMod
    use FatesIOVariableKindMod, only : site_fuel_r8, site_cwdsc_r8, site_scag_r8
    use FatesIOVariableKindMod, only : site_scagpft_r8, site_agepft_r8
    use FatesIOVariableKindMod, only : site_can_r8, site_cnlf_r8, site_cnlfpft_r8
+   use FatesIOVariableKindMod, only : site_cdamage_r8, site_cdpf_r8, site_cdsc_r8
    use FatesIOVariableKindMod, only : site_height_r8, site_elem_r8, site_elpft_r8
    use FatesIOVariableKindMod, only : site_elcwd_r8, site_elage_r8
    use FatesIODimensionsMod, only : fates_bounds_type
@@ -2737,6 +2759,7 @@ module CLMFatesInterfaceMod
    use FatesIODimensionsMod, only : fates_bounds_type
    use FatesInterfaceTypesMod, only : nlevsclass, nlevage, nlevcoage
    use FatesInterfaceTypesMod, only : nlevheight
+   use FatesInterfaceTypesMod, only : ncrowndamage
    use EDtypesMod,        only : nfsc
    use FatesLitterMod,    only : ncwd
    use EDtypesMod,        only : nlevleaf, nclmax
@@ -2807,6 +2830,15 @@ module CLMFatesInterfaceMod
    fates%cnlfpft_begin = 1
    fates%cnlfpft_end = nlevleaf * nclmax * numpft_fates
 
+   fates%cdamage_begin = 1
+   fates%cdamage_end = ncrowndamage
+   
+   fates%cdpf_begin = 1
+   fates%cdpf_end = ncrowndamage * numpft_fates * nlevsclass
+
+   fates%cdsc_begin = 1
+   fates%cdsc_end = ncrowndamage * nlevsclass
+   
    fates%elem_begin = 1
    fates%elem_end   = num_elements
 
