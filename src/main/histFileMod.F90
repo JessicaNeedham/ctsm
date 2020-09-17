@@ -2090,6 +2090,7 @@ contains
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levcdam', ncrowndamage, dimid)
+       call ncd_defdim(lnfid, 'fates_levcdcd', ncrowndamage * ncrowndamage, dimid)
        call ncd_defdim(lnfid, 'fates_levcdsc', ncrowndamage * nlevsclass, dimid)
        call ncd_defdim(lnfid, 'fates_levcdpf', ncrowndamage * nlevsclass * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelem', num_elements_fates, dimid)
@@ -2519,6 +2520,8 @@ contains
     use FatesInterfaceTypesMod, only : fates_hdim_levheight
     use FatesInterfaceTypesMod, only : fates_hdim_levpft
     use FatesInterfaceTypesMod, only : fates_hdim_levcdam
+    use FatesInterfaceTypesMod, only : fates_hdim_cdimap_levcdcd
+    use FatesInterfaceTypesMod, only : fates_hdim_cdjmap_levcdcd
     use FatesInterfaceTypesMod, only : fates_hdim_scmap_levcdsc
     use FatesInterfaceTypesMod, only : fates_hdim_cdmap_levcdsc
     use FatesInterfaceTypesMod, only : fates_hdim_scmap_levcdpf
@@ -2642,6 +2645,10 @@ contains
                   long_name='FATES PFT level of combined canopy x leaf x pft dimension', ncid=nfid(t))
              call ncd_defvar(varname='fates_levcdam',xtype=ncd_int, dim1name='fates_levcdam', &
                   long_name='FATES crown damage class', ncid=nfid(t))
+             call ncd_defvar(varname='fates_cdimap_levcdcd',xtype=ncd_int, dim1name='fates_levcdcd', &
+                  long_name='FATES damage index of damage x damage dimension', ncid=nfid(t))
+             call ncd_defvar(varname='fates_cdjmap_levcdcd',xtype=ncd_int, dim1name='fates_levcdcd', &
+                  long_name='FATES damage index of damage x damage dimension', ncid=nfid(t))
              call ncd_defvar(varname='fates_cdmap_levcdsc',xtype=ncd_int, dim1name='fates_levcdsc', &
                   long_name='FATES damage index of the combined damage-size dimension', ncid=nfid(t))
              call ncd_defvar(varname='fates_scmap_levcdsc',xtype=ncd_int, dim1name='fates_levcdsc', &
@@ -2697,6 +2704,8 @@ contains
              call ncd_io(varname='fates_lfmap_levcnlfpf',data=fates_hdim_lfmap_levcnlfpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_pftmap_levcnlfpf',data=fates_hdim_pftmap_levcnlfpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_levcdam',data=fates_hdim_levcdam, ncid=nfid(t), flag='write')
+             call ncd_io(varname='fates_cdimap_levcdcd',data=fates_hdim_cdimap_levcdcd, ncid=nfid(t), flag='write')
+             call ncd_io(varname='fates_cdjmap_levcdcd',data=fates_hdim_cdjmap_levcdcd, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_scmap_levcdsc',data=fates_hdim_scmap_levcdsc, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_cdmap_levcdsc',data=fates_hdim_cdmap_levcdsc, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_scmap_levcdpf',data=fates_hdim_scmap_levcdpf, ncid=nfid(t), flag='write')
@@ -4964,6 +4973,8 @@ contains
        num2d = nlevleaf * nclmax * numpft_fates
     case ('fates_levcdam')
        num2d = ncrowndamage
+    case ('fates_levcdcd')
+       num2d = ncrowndamage * ncrowndamage
     case ('fates_levcdsc')
        num2d = ncrowndamage * nlevsclass
     case ('fates_levcdpf')
