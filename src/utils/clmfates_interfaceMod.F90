@@ -2836,7 +2836,7 @@ module CLMFatesInterfaceMod
    fates%cdamage_end = ncrowndamage
 
    fates%cdcd_begin = 1
-   fates%cdcd_end = ncrowndamage * ncrowndamage
+   fates%cdcd_end = ncrowndamage * (ncrowndamage+1)
    
    fates%cdpf_begin = 1
    fates%cdpf_end = ncrowndamage * numpft_fates * nlevsclass

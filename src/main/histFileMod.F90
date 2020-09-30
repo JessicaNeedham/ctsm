@@ -2090,7 +2090,7 @@ contains
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levcdam', ncrowndamage, dimid)
-       call ncd_defdim(lnfid, 'fates_levcdcd', ncrowndamage * ncrowndamage, dimid)
+       call ncd_defdim(lnfid, 'fates_levcdcd', ncrowndamage * (ncrowndamage+1), dimid)
        call ncd_defdim(lnfid, 'fates_levcdsc', ncrowndamage * nlevsclass, dimid)
        call ncd_defdim(lnfid, 'fates_levcdpf', ncrowndamage * nlevsclass * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelem', num_elements_fates, dimid)
@@ -3009,6 +3009,7 @@ contains
        num2d      = tape(t)%hlist(f)%field%num2d
        nt         = tape(t)%ntimes
 
+
        if (mode == 'define') then
 
           select case (avgflag)
@@ -3081,7 +3082,8 @@ contains
           end if
 
           ! Write history output.  Always output land and ocean runoff on xy grid.
-
+          write(iulog,*) 'JN varname: ', varname
+          
           if (numdims == 1) then
              call ncd_io(flag='write', varname=varname, &
                   dim1name=type1d_out, data=hist1do, ncid=nfid(t), nt=nt)
@@ -4974,7 +4976,7 @@ contains
     case ('fates_levcdam')
        num2d = ncrowndamage
     case ('fates_levcdcd')
-       num2d = ncrowndamage * ncrowndamage
+       num2d = ncrowndamage * (ncrowndamage+1)
     case ('fates_levcdsc')
        num2d = ncrowndamage * nlevsclass
     case ('fates_levcdpf')
