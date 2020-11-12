@@ -3082,7 +3082,6 @@ contains
           end if
 
           ! Write history output.  Always output land and ocean runoff on xy grid.
-          write(iulog,*) 'JN varname: ', varname
           
           if (numdims == 1) then
              call ncd_io(flag='write', varname=varname, &
