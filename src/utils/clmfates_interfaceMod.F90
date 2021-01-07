@@ -2386,7 +2386,7 @@ module CLMFatesInterfaceMod
    use FatesIOVariableKindMod, only : site_cdamage_r8, site_cdpf_r8, site_cdsc_r8
    use FatesIOVariableKindMod, only : site_cdcd_r8
    use FatesIOVariableKindMod, only : site_height_r8, site_elem_r8, site_elpft_r8
-   use FatesIOVariableKindMod, only : site_elcwd_r8, site_elage_r8
+   use FatesIOVariableKindMod, only : site_elcwd_r8, site_elage_r8, site_agefuel_r8
    use FatesIODimensionsMod, only : fates_bounds_type
 
 
@@ -2523,10 +2523,11 @@ module CLMFatesInterfaceMod
         case(site_ground_r8, site_size_pft_r8, site_size_r8, site_pft_r8, &
              site_age_r8, site_height_r8, site_coage_r8,site_coage_pft_r8, &
              site_fuel_r8, site_cwdsc_r8, &
-             site_can_r8,site_cnlf_r8, site_cnlfpft_r8, &
-             site_cdamage_r8, site_cdcd_r8, site_cdsc_r8, site_cdpf_r8, &
-             site_scag_r8, site_scagpft_r8, site_agepft_r8, &
-             site_elem_r8, site_elpft_r8, site_elcwd_r8, site_elage_r8)
+             site_can_r8,site_cnlf_r8, site_cnlfpft_r8, site_scag_r8, & 
+             site_scagpft_r8, site_agepft_r8, site_elem_r8, site_elpft_r8, &
+             site_elcwd_r8, site_elage_r8, site_agefuel_r8,
+             site_cdamage_r8, site_cdcd_r8, site_cdsc_r8, site_cdpf_r8)
+
 
 
            d_index = this%fates_hist%dim_kinds(dk_index)%dim2_index
@@ -2912,6 +2913,10 @@ module CLMFatesInterfaceMod
 
    fates%elage_begin = 1
    fates%elage_end   = num_elements * nlevage
+
+   fates%agefuel_begin = 1
+   fates%agefuel_end   = nlevage * nfsc
+
 
    call t_stopf('fates_hlm2fatesbnds')
    
