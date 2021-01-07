@@ -2525,7 +2525,7 @@ module CLMFatesInterfaceMod
              site_fuel_r8, site_cwdsc_r8, &
              site_can_r8,site_cnlf_r8, site_cnlfpft_r8, site_scag_r8, & 
              site_scagpft_r8, site_agepft_r8, site_elem_r8, site_elpft_r8, &
-             site_elcwd_r8, site_elage_r8, site_agefuel_r8,
+             site_elcwd_r8, site_elage_r8, site_agefuel_r8, &
              site_cdamage_r8, site_cdcd_r8, site_cdsc_r8, site_cdpf_r8)
 
 
