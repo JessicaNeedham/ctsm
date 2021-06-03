@@ -313,15 +313,15 @@ module LunaMod
     t_veg_night   => temperature_inst%t_veg_night_patch               , & ! Input:  [real(r8) (:)   ] nighttime mean vegetation temperature (Kelvin)
     t_veg10_day   => temperature_inst%t_veg10_day_patch               , & ! Input:  [real(r8) (:)   ] 10-day mean daytime vegetation temperature (Kelvin)  
     t_veg10_night => temperature_inst%t_veg10_night_patch             , & ! Input:  [real(r8) (:)   ] 10-day mean nighttime vegetation temperature (Kelvin)
-    rh10_p	  => waterdiagnosticbulk_inst%rh10_af_patch                    , & ! Input:  [real(r8) (:)   ] 10-day mean canopy air relative humidity at the pacth (unitless)
+    rh10_p	  => waterdiagnosticbulk_inst%rh10_af_patch               , & ! Input:  [real(r8) (:)   ] 10-day mean canopy air relative humidity at the pacth (unitless)
     rb10_p        => frictionvel_inst%rb10_patch                      , & ! Input:  [real(r8) (:)   ] 10-day mean boundary layer resistance at the pacth (s/m)
     gpp_day       => photosyns_inst%fpsn24_patch                      , & ! Input:  [real(r8) (:)   ] patch 24 hours mean gpp(umol CO2/m**2 ground/day) for canopy layer
     vcmx25_z      => photosyns_inst%vcmx25_z_patch                    , & ! Output: [real(r8) (:,:) ] patch leaf Vc,max25 (umol/m2 leaf/s) for canopy layer 
     jmx25_z       => photosyns_inst%jmx25_z_patch                     , & ! Output: [real(r8) (:,:) ] patch leaf Jmax25 (umol electron/m**2/s) for canopy layer
     pnlc_z        => photosyns_inst%pnlc_z_patch                      , & ! Output: [real(r8) (:,:) ] patch proportion of leaf nitrogen allocated for light capture for canopy layer 
     enzs_z        => photosyns_inst%enzs_z_patch                      , & ! Output: [real(r8) (:,:) ] enzyme decay status 1.0-fully active; 0-all decayed during stress
-    vcmx_prevyr   => photosyns_inst%vcmx_prevyr                       , & ! Output: [real(r8) (:,:) ] patch leaf Vc,max25 from previous year avg
-    jmx_prevyr    => photosyns_inst%jmx_prevyr                          & ! Output: [real(r8) (:,:) ] patch leaf Jmax25 from previous year avg
+    vcmx25_z_last_valid_patch   => photosyns_inst%vcmx25_z_last_valid_patch , & ! Output: [real(r8) (:,:) ] patch leaf Vc,max25 from end of the growing season for the previous year
+    jmx25_z_last_valid_patch    => photosyns_inst%jmx25_z_last_valid_patch                          & ! Output: [real(r8) (:,:) ] patch leaf Jmax25 from the end of the growing season for the previous year
     )  
     !----------------------------------------------------------------------------------------------------------------------------------------------------------
     !set timestep
@@ -360,11 +360,11 @@ module LunaMod
          !Implemented the nitrogen allocation model
          if(tlai(p) > 0.0_r8 .and. lnc(p) > 0._r8)then   
                 RadTop = par240d_z(p,1)/rabsorb
-                PARTop = RadTop*4.6    !conversion from w/m2 to umol/m2/s. PAR is still in umol photons, not electrons. Also the par240d_z is only for radiation at visible range. Hence 4.6 not 2.3 multiplier. 
+                PARTop = RadTop*4.6_r8    !conversion from w/m2 to umol/m2/s. PAR is still in umol photons, not electrons. Also the par240d_z is only for radiation at visible range. Hence 4.6 not 2.3 multiplier. 
                 !-------------------------------------------------------------
                 !the nitrogen allocation model, may need to be feed from the parameter file in CLM
                 if (nint(c3psn(ft)) == 1)then
-                   if(gpp_day(p)>0.0 )then   !only optimize if there is growth and it is C3 plants
+                   if(gpp_day(p)>0.0_r8 )then   !only optimize if there is growth and it is C3 plants
                       !-------------------------------------------------------------
                       do z = 1, nrad(p)
                          if(tlai_z(p,z)>0.0_r8)then
@@ -425,16 +425,16 @@ module LunaMod
                          chg = vcmx25_opt-vcmx25_z(p, z)
                          chg_constrn = min(abs(chg),vcmx25_z(p, z)*max_daily_pchg)
                          vcmx25_z(p, z)  = vcmx25_z(p, z)+sign(1.0_r8,chg)*chg_constrn
-                         vcmx_prevyr(p,z) = vcmx25_z(p,z)
+                         vcmx25_z_last_valid_patch(p,z) = vcmx25_z(p,z)
                           
                          chg = jmx25_opt-jmx25_z(p, z)
                          chg_constrn = min(abs(chg),jmx25_z(p, z)*max_daily_pchg)
                          jmx25_z(p, z)  = jmx25_z(p, z)+sign(1.0_r8,chg)*chg_constrn 
-                         jmx_prevyr(p,z) = jmx25_z(p,z)
+                         jmx25_z_last_valid_patch(p,z) = jmx25_z(p,z)
 
                          PNlc_z(p, z)= PNlcopt
 
-                         if(enzs_z(p,z)<1.0) then
+                         if(enzs_z(p,z)<1.0_r8) then
                             enzs_z(p,z) = enzs_z(p,z)* (1.0_r8 + max_daily_pchg)
                          endif
                          !nitrogen allocastion model-end  
@@ -489,8 +489,8 @@ module LunaMod
                 endif !if not C3 plants                   
          else
             do z = 1 , nrad(p)
-               jmx25_z(p, z) = jmx_prevyr(p,z)
-               vcmx25_z(p, z) = vcmx_prevyr(p,z)
+               jmx25_z(p, z)  = jmx25_z_last_valid_patch(p,z)
+               vcmx25_z(p, z) = vcmx25_z_last_valid_patch(p,z)
             end do
          endif !checking for LAI and LNC
      endif !the first daycheck 
@@ -581,7 +581,7 @@ subroutine Acc240_Climate_LUNA(bounds, fn, filterp, oair, cair, &
       if(t_veg_day(p).ne.spval) then    !check whether it is the first day            
              !---------------------------------------------------------
              !calculate the 10 day running mean radiations
-             if(ndaysteps(p)>0.0) then
+             if(ndaysteps(p)>0.0_r8) then
                  par24d_z_i=par24d_z(p,:)/(dtime * ndaysteps(p))
              else
                  par24d_z_i = 0._r8
@@ -595,7 +595,7 @@ subroutine Acc240_Climate_LUNA(bounds, fn, filterp, oair, cair, &
              endif
              !-------------------------------------------------------
              !calculate the 10 day running mean daytime temperature
-             if(ndaysteps(p)>0.0)then
+             if(ndaysteps(p)>0.0_r8)then
                 t_veg_dayi    =  t_veg_day(p)   / ndaysteps(p)
              else
                 t_veg_dayi    =  t_veg_night(p) / nnightsteps(p)
@@ -833,7 +833,6 @@ subroutine NitrogenAllocation(FNCa,forc_pbot10, relh10, CO2a10,O2a10, PARi10,PAR
   real(r8), intent (out):: PNetopt                    !optimal proportion of nitrogen for electron transport 
   real(r8), intent (out):: PNrespopt                  !optimal proportion of nitrogen for respiration 
   real(r8), intent (out):: PNcbopt                    !optial proportion of nitrogen for carboxyaltion  
- 
   !-------------------------------------------------------------------------------------------------------------------------------
   !intermediate variables
   real(r8) :: Carboncost1                             !absolute amount of carbon cost associated with maintenance respiration due to deccrease in light capture nitrogen(g dry mass per day) 
@@ -899,7 +898,7 @@ subroutine NitrogenAllocation(FNCa,forc_pbot10, relh10, CO2a10,O2a10, PARi10,PAR
   Nresp = PNrespold * FNCa                            !proportion of respirational nitrogen in functional nitrogen
   Ncb = PNcbold * FNCa                                !proportion of carboxylation nitrogen in functional nitrogen
   if (Nlc > FNCa * 0.5_r8) Nlc = 0.5_r8 * FNCa
-  chg_per_step = 0.02* FNCa
+  chg_per_step = 0.02_r8* FNCa
   PNlc = PNlcold
   PNlcoldi = PNlcold  - 0.001_r8
   PARi10c = max(PARLowLim, PARi10)
@@ -1052,7 +1051,6 @@ subroutine Nitrogen_investments (KcKjFlag, FNCa, Nlc, forc_pbot10, relh10, &
   JmaxL = theta * PARimx10 / (sqrt(1.0_r8 + (theta * PARimx10 / Jmax)**2.0_r8))        
   NUEchg = (NUEc / NUEcref) * (NUEjref / NUEj)
   Wc2Wj = params_inst%wc2wjb0 * (NUEchg**0.5_r8)
-  Wc2Wj = min(1.0_r8, Wc2Wj)
   Vcmax = Wc2Wj * JmaxL * Kj2Kc
   JmeanL = theta * PARi10 / (sqrt(1.0_r8 + (ELTRNabsorb / Jmax)**2.0_r8))
   if(KcKjFlag.eq.0)then      !update the Kc,Kj, anc ci information
