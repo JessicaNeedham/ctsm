@@ -2440,7 +2440,7 @@ module CLMFatesInterfaceMod
    use FatesIOVariableKindMod, only : site_fuel_r8, site_cwdsc_r8, site_scag_r8
    use FatesIOVariableKindMod, only : site_scagpft_r8, site_agepft_r8
    use FatesIOVariableKindMod, only : site_can_r8, site_cnlf_r8, site_cnlfpft_r8
-   use FatesIOVariableKindMod, only : site_cdamage_r8, site_cdpf_r8, site_cdsc_r8
+   use FatesIOVariableKindMod, only : site_cdpf_r8, site_cdsc_r8
    use FatesIOVariableKindMod, only : site_cdcd_r8
    use FatesIOVariableKindMod, only : site_height_r8, site_elem_r8, site_elpft_r8
    use FatesIOVariableKindMod, only : site_elcwd_r8, site_elage_r8, site_agefuel_r8
@@ -2564,7 +2564,7 @@ module CLMFatesInterfaceMod
              site_can_r8,site_cnlf_r8, site_cnlfpft_r8, site_scag_r8, & 
              site_scagpft_r8, site_agepft_r8, site_elem_r8, site_elpft_r8, &
              site_elcwd_r8, site_elage_r8, site_agefuel_r8, &
-             site_cdamage_r8, site_cdcd_r8, site_cdsc_r8, site_cdpf_r8)
+             site_cdcd_r8, site_cdsc_r8, site_cdpf_r8)
 
 
 
@@ -2927,9 +2927,6 @@ module CLMFatesInterfaceMod
    
    fates%cnlfpft_begin = 1
    fates%cnlfpft_end = nlevleaf * nclmax * numpft_fates
-
-   fates%cdamage_begin = 1
-   fates%cdamage_end = ncrowndamage
 
    fates%cdcd_begin = 1
    fates%cdcd_end = ncrowndamage * (ncrowndamage+1)
