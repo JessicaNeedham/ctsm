@@ -855,9 +855,6 @@ module CLMFatesInterfaceMod
             ! Mapping between  IFP space (1,2,3) and HLM P space (looping by IFP)
             p = ifp+col%patchi(c)
 
-            this%fates(nc)%bc_in(s)%t_veg24_pa(ifp) = &
-                 temperature_inst%t_veg24_patch(p)
-
             this%fates(nc)%bc_in(s)%precip24_pa(ifp) = &
                   wateratm2lndbulk_inst%prec24_patch(p)
 
