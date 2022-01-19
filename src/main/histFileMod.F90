@@ -2458,7 +2458,6 @@ contains
        call ncd_defdim(lnfid, 'fates_levleaf', nlevleaf, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlf', nlevleaf * nclmax, dimid)
        call ncd_defdim(lnfid, 'fates_levcnlfpf', nlevleaf * nclmax * numpft_fates, dimid)
-       call ncd_defdim(lnfid, 'fates_levcdam', ncrowndamage, dimid)
        call ncd_defdim(lnfid, 'fates_levcdsc', ncrowndamage * nlevsclass, dimid)
        call ncd_defdim(lnfid, 'fates_levcdpf', ncrowndamage * nlevsclass * numpft_fates, dimid)
        call ncd_defdim(lnfid, 'fates_levelem', num_elements_fates, dimid)
@@ -3120,8 +3119,6 @@ contains
                   long_name='FATES leaf level of combined canopy x leaf x pft dimension', ncid=nfid(t))
              call ncd_defvar(varname='fates_pftmap_levcnlfpf',xtype=ncd_int, dim1name='fates_levcnlfpf', &
                   long_name='FATES PFT level of combined canopy x leaf x pft dimension', ncid=nfid(t))
-             call ncd_defvar(varname='fates_levcdam',xtype=ncd_int, dim1name='fates_levcdam', &
-                  long_name='FATES crown damage class', ncid=nfid(t))
              call ncd_defvar(varname='fates_cdmap_levcdsc',xtype=ncd_int, dim1name='fates_levcdsc', &
                   long_name='FATES damage index of the combined damage-size dimension', ncid=nfid(t))
              call ncd_defvar(varname='fates_scmap_levcdsc',xtype=ncd_int, dim1name='fates_levcdsc', &
@@ -5489,8 +5486,6 @@ contains
        num2d = nlevleaf * nclmax
     case ('fates_levcnlfpf')
        num2d = nlevleaf * nclmax * numpft_fates
-    case ('fates_levcdam')
-       num2d = ncrowndamage
     case ('fates_levcdsc')
        num2d = ncrowndamage * nlevsclass
     case ('fates_levcdpf')
