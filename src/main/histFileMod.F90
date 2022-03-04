@@ -2986,7 +2986,6 @@ contains
     use FatesInterfaceTypesMod, only : fates_hdim_levage
     use FatesInterfaceTypesMod, only : fates_hdim_levheight
     use FatesInterfaceTypesMod, only : fates_hdim_levpft
-    use FatesInterfaceTypesMod, only : fates_hdim_levcdam
     use FatesInterfaceTypesMod, only : fates_hdim_scmap_levcdsc
     use FatesInterfaceTypesMod, only : fates_hdim_cdmap_levcdsc
     use FatesInterfaceTypesMod, only : fates_hdim_scmap_levcdpf
@@ -3181,7 +3180,6 @@ contains
              call ncd_io(varname='fates_canmap_levcnlfpf',data=fates_hdim_canmap_levcnlfpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_lfmap_levcnlfpf',data=fates_hdim_lfmap_levcnlfpf, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_pftmap_levcnlfpf',data=fates_hdim_pftmap_levcnlfpf, ncid=nfid(t), flag='write')
-             call ncd_io(varname='fates_levcdam',data=fates_hdim_levcdam, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_scmap_levcdsc',data=fates_hdim_scmap_levcdsc, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_cdmap_levcdsc',data=fates_hdim_cdmap_levcdsc, ncid=nfid(t), flag='write')
              call ncd_io(varname='fates_scmap_levcdpf',data=fates_hdim_scmap_levcdpf, ncid=nfid(t), flag='write')
