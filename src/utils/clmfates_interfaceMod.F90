@@ -519,7 +519,7 @@ module CLMFatesInterfaceMod
       ! ---------------------------------------------------------------------------------
 
       use FatesInterfaceTypesMod, only : numpft_fates => numpft
-      use FatesInterfaceTypesMod, only : ncrowndamage_fates => ncrowndamage
+      use FatesInterfaceTypesMod, only : nlevdamage_fates => nlevdamage
       use FatesParameterDerivedMod, only : param_derived
       use subgridMod, only :  natveg_patch_exists
       use clm_instur       , only : wt_nat_patch
@@ -556,7 +556,7 @@ module CLMFatesInterfaceMod
 
       ! Parameter Routines
       call param_derived%Init( numpft_fates )
-      call param_derived%InitDamageTransitions (ncrowndamage_fates, numpft_fates)
+      call param_derived%InitDamageTransitions (nlevdamage_fates, numpft_fates)
       
       nclumps = get_proc_clumps()
       allocate(this%fates(nclumps))
@@ -3001,7 +3001,7 @@ module CLMFatesInterfaceMod
    use FatesIODimensionsMod, only : fates_bounds_type
    use FatesInterfaceTypesMod, only : nlevsclass, nlevage, nlevcoage
    use FatesInterfaceTypesMod, only : nlevheight
-   use FatesInterfaceTypesMod, only : ncrowndamage
+   use FatesInterfaceTypesMod, only : nlevdamage
    use EDtypesMod,        only : nfsc
    use FatesLitterMod,    only : ncwd
    use EDtypesMod,        only : nlevleaf, nclmax
@@ -3070,10 +3070,13 @@ module CLMFatesInterfaceMod
    fates%cnlfpft_end = nlevleaf * nclmax * numpft_fates
 
    fates%cdpf_begin = 1
-   fates%cdpf_end = ncrowndamage * numpft_fates * nlevsclass
+   fates%cdpf_end = nlevdamage * numpft_fates * nlevsclass
 
    fates%cdsc_begin = 1
-   fates%cdsc_end = ncrowndamage * nlevsclass
+   fates%cdsc_end = nlevdamage * nlevsclass
+
+   fates%cdam_begin = 1
+   fates_cdam_end = nlevdamage
    
    fates%elem_begin = 1
    fates%elem_end   = num_elements
