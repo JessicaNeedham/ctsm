@@ -1228,7 +1228,7 @@ sub setup_cmdl_spinup {
      }
   }
   $log->verbose_message("CLM accelerated spinup mode is $val");
-  if ( &value_is_true($nl_flags->{'use_cn'}) ) {
+  if ( &value_is_true($nl_flags->{'use_cn'}) or &value_is_true($nl_flags->{'use_fates'}) ) {
     add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition,
                 $defaults, $nl, "spinup_state", clm_accelerated_spinup=>$nl_flags->{'clm_accelerated_spinup'},
                 use_cn=>$nl_flags->{'use_cn'}, use_fates=>$nl_flags->{'use_fates'},
@@ -1246,7 +1246,7 @@ sub setup_cmdl_spinup {
        $nl_flags->{'bgc_spinup'} = "off";
     }
     # For AD spinup mode by default reseed dead plants
-    if ( $nl_flags->{$var} ne "off" ) {
+    if ( $nl_flags->{$var} ne "off"  and (not &value_is_true($nl_flags->{'use_fates'}) )) {
         add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition,
                     $defaults, $nl, "reseed_dead_plants", clm_accelerated_spinup=>$nl_flags->{$var},
                     use_cn=>$nl_flags->{'use_cn'} );
@@ -2250,7 +2250,7 @@ sub setup_logic_params_file {
 
   add_default($opts, $nl_flags->{'inputdata_rootdir'}, $definition, $defaults, $nl, 'paramfile',
               'phys'=>$nl_flags->{'phys'},
-              'use_flexibleCN'=>$nl_flags->{'use_flexibleCN'} );
+              'use_flexibleCN'=>$nl_flags->{'use_flexibleCN'}, 'use_fates'=>$nl_flags->{'use_fates'});
 }
 
 #-------------------------------------------------------------------------------
