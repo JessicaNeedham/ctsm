@@ -4857,6 +4857,17 @@
       <option name="comment">""</option>
     </options>
   </test>
+
+  <test name="ERS_Ld11_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesIniSpinup">
+    <machines>
+      <machine name="betzy" compiler="intel" category="aux_clm_noresm"/>
+    </machines>
+    <options>
+      <option name="wallclock">00:50:00</option>
+      <option name="comment">""</option>
+    </options>
+  </test>
+
   <test name="SMS_D_Ld1000_P1536" grid="ne30pg3_ne30pg3_mtn14" compset="I1850Clm60FatesNocompSpinup" testmods="clm/FatesColdSpinup">
     <machines>
       <machine name="betzy" compiler="gnu" category="aux_clm_noresm"/>
